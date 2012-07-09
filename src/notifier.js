@@ -32,7 +32,7 @@
     Util = {
         merge: (function() {
             function processProperty(key, dest, src) {
-                if (src.hasOwnProperty(key)) {
+                if (src.hasOwnProperty(key) === true) {
                     dest[key] = src[key];
                 }
             }
@@ -106,6 +106,7 @@
         this.options = Util.merge({}, Config.options);
         this.xmlData = Util.merge(this.DEF_XML_DATA, Config.xmlData);
     }
+    
     Notifier.prototype = {
         constructor: Notifier,
         VERSION: '0.2.0',
@@ -140,7 +141,7 @@
         generateXML: function(errorWithoutDefaults) {
             var xmlData = this.xmlData,
                 cgi_data,
-                i,
+                i, max_i,
                 methods,
                 type,
                 error = Util.merge(this.options.errorDefaults, errorWithoutDefaults),
@@ -155,7 +156,7 @@
 
                 methods = ['params', 'session'];
 
-                for (i = 0; i < methods.length; i++) {
+                for (i = 0, max_i = methods.length; i < max_i; i++) {
                     type = methods[i];
 
                     if (error[type]) {
@@ -179,7 +180,7 @@
         generateBacktrace: function(error) {
             var backtrace = [],
                 file,
-                i,
+                i, max_i,
                 matches,
                 stacktrace;
 
@@ -195,13 +196,13 @@
 
             stacktrace = this.getStackTrace(error);
 
-            for (i = 0; i < stacktrace.length; i++) {
+            for (i = 0, max_i = stacktrace.length; i < max_i; i++) {
                 matches = stacktrace[i].match(this.BACKTRACE_MATCHER);
 
-                if (matches && this.validBacktraceLine(stacktrace[i])) {
+                if ((matches !== null) && this.validBacktraceLine(stacktrace[i])) {
                     file = matches[2].replace(this.ROOT, '[PROJECT_ROOT]');
 
-                    if (i === 0 && matches[2].match(document.location.href)) {
+                    if ((i === 0) && matches[2].match(document.location.href)) {
                         backtrace.push('<line method="" file="internal: " number=""/>');
                     }
 
@@ -214,14 +215,14 @@
         },
 
         getStackTrace: function(error) {
-            var i,
+            var i, max_i,
                 stacktrace = printStackTrace({
                     e: error,
                     guess: this.options.guessFunctionName
                 });
 
-            for (i = 0; i < stacktrace.length; i++) {
-                if (stacktrace[i].match(/\:\d+$/)) {
+            for (i = 0, max_i = stacktrace.length; i < max_i; i++) {
+                if (stacktrace[i].match(/\:\d+$/) !== null) {
                     continue;
                 }
 
@@ -236,8 +237,10 @@
         },
 
         validBacktraceLine: function(line) {
-            for (var i = 0; i < this.backtrace_filters.length; i++) {
-                if (line.match(this.backtrace_filters[i])) {
+            var i, max_i;
+            
+            for (i = 0, max_i = this.backtrace_filters.length; i < max_i; i++) {
+                if (line.match(this.backtrace_filters[i]) !== null) {
                     return false;
                 }
             }
@@ -250,7 +253,7 @@
                 result = '';
 
             for (key in parameters) {
-                if (parameters.hasOwnProperty(key)) {
+                if (parameters.hasOwnProperty(key) === true) {
                     result += '<var key="' + Util.escape(key) + '">' + Util.escape(parameters[key]) + '</var>';
                 }
             }
