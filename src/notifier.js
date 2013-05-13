@@ -316,14 +316,17 @@
         }, {
             variable: 'host',
             namespace: 'options'
-        },{
-		    variable: 'projectId',
+        }, {
+            variable: 'projectId',
             namespace: 'options'
-		},{
+        }, {
             variable: 'errorDefaults',
             namespace: 'options'
         }, {
             variable: 'guessFunctionName',
+            namespace: 'options'
+        }, {
+            variable: 'requestType',
             namespace: 'options'
         }, {
             variable: 'outputFormat',
